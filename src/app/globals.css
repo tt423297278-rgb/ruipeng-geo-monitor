@@ -78,3 +78,319 @@ th {
   font-size: 12px;
   font-weight: 800;
 }
+
+.hero-carousel {
+  position: relative;
+  margin-bottom: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 84, 166, 0.14);
+  border-radius: 14px;
+  background: #063b73;
+  box-shadow: 0 18px 50px rgba(6, 59, 115, 0.16);
+}
+
+.hero-carousel-track {
+  display: flex;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-slide {
+  position: relative;
+  display: grid;
+  min-width: 100%;
+  min-height: 330px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+  overflow: hidden;
+  color: #fff;
+  isolation: isolate;
+}
+
+.hero-slide::before,
+.hero-slide::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+}
+
+.hero-slide::before {
+  inset: 0;
+  background:
+    radial-gradient(circle at 76% 10%, rgba(112, 232, 255, 0.32), transparent 30%),
+    linear-gradient(115deg, rgba(4, 40, 81, 0.98) 5%, rgba(0, 84, 166, 0.96) 55%, rgba(18, 167, 190, 0.78));
+}
+
+.hero-slide::after {
+  right: -12%;
+  bottom: -70%;
+  width: 56%;
+  aspect-ratio: 1;
+  border: 80px solid rgba(255, 255, 255, 0.07);
+  border-radius: 50%;
+}
+
+.hero-slide-surgery::before {
+  background:
+    radial-gradient(circle at 78% 15%, rgba(116, 255, 211, 0.28), transparent 30%),
+    linear-gradient(115deg, #073d67 5%, #087a8d 58%, #18a999);
+}
+
+.hero-slide-icu::before {
+  background:
+    radial-gradient(circle at 78% 15%, rgba(122, 199, 255, 0.3), transparent 30%),
+    linear-gradient(115deg, #102a56 5%, #184d92 55%, #2878c8);
+}
+
+.hero-slide-laboratory::before {
+  background:
+    radial-gradient(circle at 78% 15%, rgba(160, 239, 255, 0.34), transparent 30%),
+    linear-gradient(115deg, #123d68 5%, #176e9b 55%, #30a6bd);
+}
+
+.hero-slide-care::before {
+  background:
+    radial-gradient(circle at 78% 15%, rgba(144, 255, 226, 0.3), transparent 30%),
+    linear-gradient(115deg, #073968 5%, #006f99 55%, #22a69a);
+}
+
+.hero-slide-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 72px 54px;
+}
+
+.hero-slide-eyebrow {
+  margin: 0 0 14px;
+  color: #9feef3;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+}
+
+.hero-slide h2 {
+  max-width: 600px;
+  margin: 0;
+  font-size: clamp(25px, 3vw, 40px);
+  font-weight: 900;
+  line-height: 1.22;
+  letter-spacing: -0.035em;
+}
+
+.hero-slide-description {
+  max-width: 560px;
+  margin: 18px 0 0;
+  color: rgba(236, 248, 255, 0.78);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.8;
+}
+
+.hero-slide-meta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 26px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.hero-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5ff4d0;
+  box-shadow: 0 0 0 7px rgba(95, 244, 208, 0.14);
+}
+
+.hero-slide-count {
+  margin-left: 8px;
+  color: rgba(255, 255, 255, 0.52);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-medical-visual {
+  position: relative;
+  display: grid;
+  min-height: 330px;
+  place-items: center;
+}
+
+.hero-device {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  width: 210px;
+  height: 210px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 42px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.25), 0 28px 60px rgba(0, 28, 65, 0.28);
+  backdrop-filter: blur(12px);
+  transform: rotate(4deg);
+}
+
+.hero-device svg {
+  width: 76%;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.92);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 6;
+}
+
+.hero-orbit {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+}
+
+.hero-orbit-large {
+  width: 320px;
+  height: 320px;
+}
+
+.hero-orbit-small {
+  width: 270px;
+  height: 270px;
+  border-style: dashed;
+  animation: hero-orbit-spin 28s linear infinite;
+}
+
+.hero-visual-grid {
+  position: absolute;
+  inset: 16% 5% 8% 0;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(circle, #000 20%, transparent 68%);
+}
+
+.hero-carousel-arrow {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: rgba(4, 40, 81, 0.36);
+  color: #fff;
+  font-size: 18px;
+  backdrop-filter: blur(8px);
+  transform: translateY(-50%);
+}
+
+.hero-carousel-arrow:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.hero-carousel-arrow-left {
+  left: 18px;
+}
+
+.hero-carousel-arrow-right {
+  right: 18px;
+}
+
+.hero-carousel-dots {
+  position: absolute;
+  z-index: 5;
+  bottom: 18px;
+  left: 50%;
+  display: flex;
+  gap: 7px;
+  transform: translateX(-50%);
+}
+
+.hero-carousel-dots button {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+  transition: width 250ms ease, background-color 250ms ease;
+}
+
+.hero-carousel-dots button.is-active {
+  width: 26px;
+  background: #fff;
+}
+
+@keyframes hero-orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-slide {
+    min-height: 400px;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-slide-copy {
+    z-index: 2;
+    padding: 38px 48px 150px;
+  }
+
+  .hero-medical-visual {
+    position: absolute;
+    right: -40px;
+    bottom: -100px;
+    width: 280px;
+    min-height: 280px;
+    opacity: 0.52;
+  }
+
+  .hero-device {
+    width: 170px;
+    height: 170px;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-slide {
+    min-height: 430px;
+  }
+
+  .hero-slide-copy {
+    justify-content: flex-start;
+    padding: 36px 30px 150px;
+  }
+
+  .hero-slide h2 {
+    font-size: 27px;
+  }
+
+  .hero-carousel-arrow {
+    top: auto;
+    bottom: 12px;
+    transform: none;
+  }
+
+  .hero-carousel-arrow-left {
+    left: 14px;
+  }
+
+  .hero-carousel-arrow-right {
+    right: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel-track {
+    transition: none;
+  }
+
+  .hero-orbit-small {
+    animation: none;
+  }
+}

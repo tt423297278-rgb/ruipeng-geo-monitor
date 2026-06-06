@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/empty-state";
+import { HeroCarousel } from "@/components/hero-carousel";
 import { PageHeader } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
 import { getDashboardData } from "@/lib/services/dashboard";
@@ -30,6 +31,8 @@ export default async function DashboardPage() {
         title="首页数据看板"
         description="汇总关键词、问题、模型调用和曝光检测结果，用于快速判断瑞鹏品牌在 AI 回答中的可见度。"
       />
+
+      <HeroCarousel />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <StatCard label="总关键词数" value={data.keywordCount} />
