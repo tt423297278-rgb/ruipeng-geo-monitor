@@ -94,7 +94,17 @@ export async function getDashboardData(options: { projectName?: string } = {}) {
     averageScore: Math.round(item.totalScore / item.count),
   }));
 
-  const hotKeywords = buildHotKeywords(keywords, exposureChecks);
+  const keywordExposureChecks = exposureChecks.filter(
+    (
+      item,
+    ): item is typeof item & {
+      response: typeof item.response & {
+        keywordId: string;
+        keyword: NonNullable<typeof item.response.keyword>;
+      };
+    } => Boolean(item.response.keywordId && item.response.keyword),
+  );
+  const hotKeywords = buildHotKeywords(keywords, keywordExposureChecks);
   const trackedTerms = buildTrackedTerms(projects, exposureChecks);
   const trendPoints = buildTrendPoints(exposureChecks);
   const wordCloudTerms = buildWordCloudTerms({

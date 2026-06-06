@@ -1,13 +1,17 @@
 import { PageHeader } from "@/components/page-header";
 import { createProjectAction } from "@/app/actions";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProjectsPage() {
   const projects = await prisma.project.findMany({
     orderBy: { createdAt: "desc" },
-    include: { _count: { select: { keywords: true, questions: true, responses: true } } },
+    include: {
+      knowledge: true,
+      _count: { select: { keywords: true, questions: true, responses: true } },
+    },
   });
 
   return (
@@ -60,6 +64,8 @@ export default async function ProjectsPage() {
                   <th>关键词</th>
                   <th>问题</th>
                   <th>调用</th>
+                  <th>资料增强</th>
+                  <th>操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -70,6 +76,15 @@ export default async function ProjectsPage() {
                     <td>{project._count.keywords}</td>
                     <td>{project._count.questions}</td>
                     <td>{project._count.responses}</td>
+                    <td>{project.knowledge?.webSearchEnabled ? "项目资料 + 联网搜索" : project.knowledge ? "项目资料" : "未配置"}</td>
+                    <td>
+                      <Link
+                        href={`/projects/${project.id}/knowledge`}
+                        className="text-sm font-black text-ruipeng-blue hover:text-ruipeng-dark"
+                      >
+                        编辑资料
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>

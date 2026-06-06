@@ -1,8 +1,8 @@
-import { checkExposure } from "@/lib/exposure-check";
 import { generateQuestionsForKeyword } from "@/lib/core/question-generator.mjs";
 import { prisma } from "@/lib/prisma";
-import { callAIProvider } from "@/lib/ai-providers";
 import { ensureDefaultProviders } from "./providers";
+import { runEnhancedAiCall } from "./enhanced-ai";
+import { recordAiCall } from "./ai-call-records";
 
 function splitCompetitors(value?: string | null) {
   return String(value || "")
@@ -50,6 +50,7 @@ export async function runProjectMonitoring(projectId: string) {
   const project = await prisma.project.findUnique({
     where: { id: projectId },
     include: {
+      knowledge: true,
       questions: {
         include: { keyword: true },
         orderBy: { createdAt: "asc" },
@@ -72,53 +73,35 @@ export async function runProjectMonitoring(projectId: string) {
   for (const question of project.questions) {
     for (const provider of providers) {
       const modelName = process.env[provider.modelEnv] || provider.name;
-      const callResult = await callAIProvider({
+      const callResult = await runEnhancedAiCall({
         provider: provider.name,
         model: modelName,
         question: question.question,
+        project: {
+          projectName: project.name,
+          brandName: project.brandName,
+          officialWebsite: project.officialWebsite,
+          phone: project.phone,
+          address: project.address,
+          knowledge: project.knowledge,
+        },
+        competitors: splitCompetitors(project.competitorNames),
       });
 
-      const aiResponse = await prisma.aiResponse.create({
-        data: {
-          projectId: project.id,
-          keywordId: question.keywordId,
-          questionId: question.id,
-          providerId: provider.id,
-          providerName: provider.displayName,
-          modelName,
-          fullAnswer: callResult.answer,
-          success: callResult.success,
-          failureReason: callResult.errorMessage,
-        },
+      await recordAiCall({
+        projectId: project.id,
+        keywordId: question.keywordId,
+        questionId: question.id,
+        question: question.question,
+        providerId: provider.id,
+        providerName: provider.displayName,
+        modelName,
+        result: callResult,
       });
 
       if (callResult.success) {
         successCount += 1;
       }
-
-      const exposure = checkExposure({
-        answer: callResult.answer,
-        brandName: project.brandName,
-        website: project.officialWebsite,
-        phone: project.phone,
-        address: project.address,
-        competitors: splitCompetitors(project.competitorNames),
-      });
-
-      await prisma.exposureCheck.create({
-        data: {
-          responseId: aiResponse.id,
-          brandMentioned: exposure.hasBrandName,
-          websiteMentioned: exposure.hasWebsite,
-          phoneMentioned: exposure.hasPhone,
-          addressMentioned: exposure.hasAddress,
-          brandMentionCount: exposure.brandMentionCount,
-          brandPosition: exposure.brandPosition,
-          competitorMentioned: exposure.hasCompetitor,
-          matchedCompetitors: JSON.stringify(exposure.matchedCompetitors),
-          score: exposure.score,
-        },
-      });
 
       responseCount += 1;
     }

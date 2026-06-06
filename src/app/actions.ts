@@ -26,6 +26,39 @@ export async function createProjectAction(formData: FormData) {
   revalidatePath("/projects");
 }
 
+export async function updateProjectKnowledgeAction(formData: FormData) {
+  const projectId = requiredText(formData, "projectId");
+
+  await prisma.projectKnowledge.upsert({
+    where: { projectId },
+    update: {
+      aliases: String(formData.get("aliases") || "").trim(),
+      address: String(formData.get("address") || "").trim(),
+      phone: String(formData.get("phone") || "").trim(),
+      website: String(formData.get("website") || "").trim(),
+      mapUrl: String(formData.get("mapUrl") || "").trim(),
+      introduction: String(formData.get("introduction") || "").trim(),
+      specialties: String(formData.get("specialties") || "").trim(),
+      webSearchEnabled: formData.get("webSearchEnabled") === "on",
+    },
+    create: {
+      projectId,
+      aliases: String(formData.get("aliases") || "").trim(),
+      address: String(formData.get("address") || "").trim(),
+      phone: String(formData.get("phone") || "").trim(),
+      website: String(formData.get("website") || "").trim(),
+      mapUrl: String(formData.get("mapUrl") || "").trim(),
+      introduction: String(formData.get("introduction") || "").trim(),
+      specialties: String(formData.get("specialties") || "").trim(),
+      webSearchEnabled: formData.get("webSearchEnabled") === "on",
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/projects");
+  revalidatePath(`/projects/${projectId}/knowledge`);
+}
+
 export async function addKeywordsAction(formData: FormData) {
   const projectId = requiredText(formData, "projectId");
   const text = requiredText(formData, "keywords");

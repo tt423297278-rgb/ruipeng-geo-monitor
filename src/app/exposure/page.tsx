@@ -48,6 +48,7 @@ export default async function ExposurePage() {
                   <th>命中竞品</th>
                   <th>位置</th>
                   <th>分数</th>
+                  <th>增强模式</th>
                 </tr>
               </thead>
               <tbody>
@@ -55,7 +56,7 @@ export default async function ExposurePage() {
                   <tr key={item.id}>
                     <td>{item.response.project.name}</td>
                     <td>{item.response.providerName}</td>
-                    <td>{item.response.keyword.text}</td>
+                    <td>{item.response.keyword?.text || "手动测试"}</td>
                     <td>{item.brandMentioned ? `是（${item.brandMentionCount}）` : "否"}</td>
                     <td>{item.websiteMentioned ? "是" : "否"}</td>
                     <td>{item.phoneMentioned ? "是" : "否"}</td>
@@ -65,6 +66,13 @@ export default async function ExposurePage() {
                     <td>{positionLabel[item.brandPosition] || item.brandPosition}</td>
                     <td>
                       <span className="font-black text-ruipeng-blue">{item.score}</span>
+                    </td>
+                    <td>
+                      {item.response.enrichmentEnabled
+                        ? item.response.webSearchUsed
+                          ? "项目资料 + 联网"
+                          : "仅项目资料"
+                        : "未启用"}
                     </td>
                   </tr>
                 ))}

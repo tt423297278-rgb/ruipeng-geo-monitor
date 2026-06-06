@@ -19,6 +19,8 @@ test("环境变量模板只包含占位变量，不包含真实密钥", async ()
     "DEEPSEEK_API_KEY=",
     "KIMI_API_KEY=",
     "DOUBAO_API_KEY=",
+    "WEB_SEARCH_API_KEY=",
+    "WEB_SEARCH_BASE_URL=",
     "NEXT_PUBLIC_APP_URL=",
     "CRON_SECRET=",
     "ADMIN_USERNAME=",

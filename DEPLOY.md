@@ -65,6 +65,8 @@ DATABASE_URL=
 DEEPSEEK_API_KEY=
 KIMI_API_KEY=
 DOUBAO_API_KEY=
+WEB_SEARCH_API_KEY=
+WEB_SEARCH_BASE_URL=https://api.tavily.com/search
 NEXT_PUBLIC_APP_URL=
 CRON_SECRET=
 ADMIN_USERNAME=
@@ -84,6 +86,15 @@ KIMI_MODEL=moonshot-v1-8k
 DOUBAO_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
 DOUBAO_MODEL=你的火山方舟 endpoint id
 ```
+
+可选联网搜索配置：
+
+```text
+WEB_SEARCH_API_KEY=你的服务端搜索 API Key
+WEB_SEARCH_BASE_URL=https://api.tavily.com/search
+```
+
+搜索 Key 只能配置在服务端环境变量中。未配置时，系统仍会使用 Project Knowledge 增强回答，并在监测记录中标记未使用联网搜索。
 
 账号说明：
 

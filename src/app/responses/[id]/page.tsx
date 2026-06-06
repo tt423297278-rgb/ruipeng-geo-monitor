@@ -29,6 +29,13 @@ export default async function ResponseDetailPage({ params }: { params: { id: str
   }
 
   const check = response.exposureCheck;
+  const searchResults = parseJsonArray<{
+    title?: string;
+    url?: string;
+    content?: string;
+    sourceType?: string;
+  }>(response.searchResults);
+  const matchedKeywords = parseJsonArray<string>(response.matchedKeywords);
 
   return (
     <>
@@ -54,16 +61,49 @@ export default async function ResponseDetailPage({ params }: { params: { id: str
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <InfoCard label="项目" value={response.project.name} />
-        <InfoCard label="关键词" value={response.keyword.text} />
+        <InfoCard label="关键词" value={response.keyword?.text || "手动测试"} />
         <InfoCard label="模型" value={`${response.providerName}${response.modelName ? ` / ${response.modelName}` : ""}`} />
         <InfoCard label="调用时间" value={response.calledAt.toLocaleString("zh-CN")} />
+        <InfoCard label="资料增强" value={response.enrichmentEnabled ? (response.webSearchUsed ? "项目资料 + 联网搜索" : "仅项目资料") : "未启用"} />
+        <InfoCard label="搜索/增强错误" value={response.enrichmentError || "-"} />
       </section>
 
       <section className="mt-6 rounded-md border border-slate-200 bg-white p-5">
         <h2 className="mb-3 text-base font-black text-slate-900">用户问题</h2>
         <p className="rounded-md bg-slate-50 p-4 text-sm font-semibold leading-7 text-slate-800">
-          {response.question.question}
+          {response.questionText || response.question?.question || "-"}
         </p>
+      </section>
+
+      <section className="mt-6 rounded-md border border-slate-200 bg-white p-5">
+        <h2 className="mb-4 text-base font-black text-slate-900">使用的搜索与项目资料</h2>
+        {searchResults.length === 0 ? (
+          <EmptyState text="这条回答没有记录增强资料" />
+        ) : (
+          <div className="grid gap-3">
+            {searchResults.map((source, index) => (
+              <article key={`${source.url}-${index}`} className="rounded-md bg-slate-50 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-sm font-black text-slate-900">{source.title || `资料 ${index + 1}`}</p>
+                  <span className="rounded bg-blue-50 px-2 py-1 text-xs font-bold text-ruipeng-blue">
+                    {source.sourceType === "web_search" ? "联网搜索" : "项目资料"}
+                  </span>
+                </div>
+                {source.url ? (
+                  <a href={source.url} target="_blank" rel="noreferrer" className="mt-2 block break-all text-xs font-bold text-ruipeng-blue">
+                    {source.url}
+                  </a>
+                ) : null}
+                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">{source.content || "-"}</p>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="mt-6 grid gap-6 xl:grid-cols-2">
+        <TextPanel title="发送给模型的完整 Prompt" value={response.prompt || "未记录"} />
+        <TextPanel title="模型原始响应" value={response.rawResponse || "未记录"} />
       </section>
 
       <section className="mt-6 rounded-md border border-slate-200 bg-white p-5">
@@ -97,11 +137,33 @@ export default async function ResponseDetailPage({ params }: { params: { id: str
             <Metric label="竞品" value={check.competitorMentioned ? "是" : "否"} />
             <Metric label="命中竞品" value={check.matchedCompetitors} />
             <Metric label="曝光分" value={`${check.score} 分`} highlight />
+            <Metric label="命中资料关键词" value={matchedKeywords.join("、") || "无"} />
           </div>
         )}
       </section>
     </>
   );
+}
+
+function TextPanel({ title, value }: { title: string; value: string }) {
+  return (
+    <section className="rounded-md border border-slate-200 bg-white p-5">
+      <h2 className="mb-3 text-base font-black text-slate-900">{title}</h2>
+      <pre className="max-h-96 overflow-auto whitespace-pre-wrap rounded-md bg-slate-50 p-4 text-xs leading-6 text-slate-800">
+        {value}
+      </pre>
+    </section>
+  );
+}
+
+function parseJsonArray<T>(value?: string | null): T[] {
+  if (!value) return [];
+  try {
+    const parsed: unknown = JSON.parse(value);
+    return Array.isArray(parsed) ? (parsed as T[]) : [];
+  } catch {
+    return [];
+  }
 }
 
 function InfoCard({ label, value }: { label: string; value: string }) {

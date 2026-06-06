@@ -7,6 +7,7 @@ function isPublicPath(pathname: string) {
   return (
     PUBLIC_PATHS.includes(pathname) ||
     pathname.startsWith("/_next/") ||
+    pathname.startsWith("/api/ai/call") ||
     pathname.startsWith("/api/monitor/run")
   );
 }

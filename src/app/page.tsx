@@ -90,7 +90,7 @@ export default async function DashboardPage() {
                     <tr key={item.id}>
                       <td>{item.project.name}</td>
                       <td>{item.providerName}</td>
-                      <td>{item.question.question}</td>
+                      <td>{item.questionText || item.question?.question || "-"}</td>
                       <td>{item.success ? "成功" : "失败"}</td>
                       <td>{item.exposureCheck?.score ?? "-"}</td>
                       {!isCustomer ? (

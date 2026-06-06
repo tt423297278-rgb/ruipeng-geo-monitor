@@ -54,6 +54,7 @@ export default async function ResponsesPage() {
                   <th>模型</th>
                   <th>问题</th>
                   <th>状态</th>
+                  <th>增强模式</th>
                   <th>回答/失败原因</th>
                   <th>操作</th>
                 </tr>
@@ -63,10 +64,18 @@ export default async function ResponsesPage() {
                   <tr key={item.id}>
                     <td>{item.calledAt.toLocaleString("zh-CN")}</td>
                     <td>{item.project.name}</td>
-                    <td>{item.keyword.text}</td>
+                    <td>{item.keyword?.text || "手动测试"}</td>
                     <td>{item.providerName}</td>
-                    <td>{item.question.question}</td>
+                    <td>{item.questionText || item.question?.question || "-"}</td>
                     <td>{item.success ? "成功" : "失败"}</td>
+                    <td>
+                      {item.enrichmentEnabled
+                        ? item.webSearchUsed
+                          ? "项目资料 + 联网"
+                          : "仅项目资料"
+                        : "未启用"}
+                      {item.enrichmentError ? <p className="mt-1 text-xs text-amber-700">{item.enrichmentError}</p> : null}
+                    </td>
                     <td className="max-w-xl text-sm text-slate-600">
                       {item.success ? item.fullAnswer : item.failureReason}
                     </td>

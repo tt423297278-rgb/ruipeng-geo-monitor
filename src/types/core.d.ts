@@ -27,3 +27,15 @@ declare module "@/lib/core/exposure-checker.mjs" {
     competitors?: string[] | string | null;
   }): ExposureResult;
 }
+
+declare module "@/lib/core/enhancement.mjs" {
+  export type EnhancementSource = {
+    title: string;
+    url: string;
+    content: string;
+    sourceType: "project_knowledge" | "web_search";
+  };
+
+  export function buildEnhancedPrompt(question: string, sources: EnhancementSource[]): string;
+  export function findMatchedKeywords(answer: string, terms: string[]): string[];
+}
