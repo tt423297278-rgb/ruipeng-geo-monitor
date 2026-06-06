@@ -73,6 +73,20 @@ export async function verifyAuthToken(token?: string | null): Promise<{ role: Au
   return { role };
 }
 
+export function shouldUseSecureAuthCookie() {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
+
+  if (appUrl) {
+    try {
+      return new URL(appUrl).protocol === "https:";
+    } catch {
+      return false;
+    }
+  }
+
+  return process.env.NODE_ENV === "production";
+}
+
 export function resolveLoginRole(username: string, password: string): AuthRole | null {
   const adminUsername = process.env.ADMIN_USERNAME;
   const adminPassword = process.env.ADMIN_PASSWORD;

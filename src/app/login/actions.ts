@@ -1,6 +1,12 @@
 "use server";
 
-import { AUTH_COOKIE_NAME, AUTH_MAX_AGE_SECONDS, createAuthToken, resolveLoginRole } from "@/lib/auth";
+import {
+  AUTH_COOKIE_NAME,
+  AUTH_MAX_AGE_SECONDS,
+  createAuthToken,
+  resolveLoginRole,
+  shouldUseSecureAuthCookie,
+} from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -20,7 +26,7 @@ export async function loginAction(formData: FormData) {
     maxAge: AUTH_MAX_AGE_SECONDS,
     path: "/",
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: shouldUseSecureAuthCookie(),
   });
 
   redirect(nextPath.startsWith("/") ? nextPath : "/");
