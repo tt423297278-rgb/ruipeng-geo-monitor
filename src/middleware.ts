@@ -1,16 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AUTH_COOKIE_NAME, verifyAuthToken } from "@/lib/auth";
-
-const PUBLIC_PATHS = ["/login", "/favicon.ico", "/ruipeng-logo.png"];
-
-function isPublicPath(pathname: string) {
-  return (
-    PUBLIC_PATHS.includes(pathname) ||
-    pathname.startsWith("/_next/") ||
-    pathname.startsWith("/api/ai/call") ||
-    pathname.startsWith("/api/monitor/run")
-  );
-}
+import { isPublicRequestPath } from "@/lib/public-routes";
 
 function appUrl(pathname: string, requestUrl: string) {
   const origin = process.env.NEXT_PUBLIC_APP_URL || requestUrl;
@@ -25,7 +15,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(appUrl("/", request.url));
   }
 
-  if (isPublicPath(pathname)) {
+  if (isPublicRequestPath(pathname)) {
     return NextResponse.next();
   }
 
